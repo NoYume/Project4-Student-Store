@@ -180,8 +180,8 @@ The point: the client either gets a full order back or gets an error, and a half
 
 ### Order Model (Milestone 3)
 
-- **Built four of the five order routes:** GET list, GET by id, PUT, and DELETE. POST /orders was left for Milestone 5, since it needs the OrderItem model from Milestone 4 and the transaction work from Milestone 5. Building it now would mean writing code that gets thrown away.
-- **GET /orders/:order_id returns the order without its items for now.** The spec says it should include the order items, but OrderItem does not exist until Milestone 4. The include option gets added then. This is the milestone order, not a missing feature.
+- **Built four of the five order routes at this milestone:** GET list, GET by id, PUT, and DELETE. POST /orders was left for Milestone 5, since it needs the OrderItem model from Milestone 4 and the transaction work from Milestone 5. Building it earlier would have meant writing code that gets thrown away. It was implemented in Milestone 5 as planned.
+- **GET /orders/:order_id returned the order without its items at this milestone.** The spec says it should include the order items, but OrderItem did not exist until Milestone 4. The include option was added in Milestone 4, so the endpoint now matches the spec. This was the milestone order, not a missing feature.
 - **The default values worked as planned.** totalPrice defaults to 0, status defaults to pending, and createdAt defaults to the current time. No spec change needed.
 
 ### Order Creation Transaction (Milestone 5)
@@ -206,6 +206,28 @@ Cascade delete verification:
 - Deleting a Product removes its OrderItems, and the order stays: tested. Deleted a product and the order item that pointed to it was gone while its order remained.
 - Deleting an Order removes its OrderItems, and the products stay: tested. Deleted an order and its items were gone while every product remained.
 
-### Final Audit
+### Final Audit (Milestone 6)
 
-Filled in at Milestone 6.
+Frontend requirements audit. Every API call in the frontend was found and checked against Section 2. The starter UI was only half wired: App.jsx and ProductDetail.jsx imported axios but made no calls, and handleOnCheckout was an empty function. So the audit was both a comparison and a to-do list. The data calls are:
+
+- GET /products — loaded once when App mounts, fills the product grid.
+- GET /products/:id — loads one product on the ProductDetail page; a 404 falls through to the NotFound page.
+- POST /orders — runs on checkout from the shopping cart.
+
+Full-system audit result:
+
+- All ten required endpoints match the API contract. The three the frontend actually calls were tested end to end against a running server.
+- CORS was already enabled in server.js (the cors middleware, allowing all origins). The spec had not documented CORS, so this note records it: the frontend runs on port 5173 and the API on 3000, so cross-origin requests must be allowed.
+- The order total is computed by the server and returned in totalPrice, never sent by the client, exactly as Section 3 promised. The checkout uses that returned value for the receipt.
+- Database setup, for the record: the API connects to PostgreSQL through Prisma using the DATABASE_URL in the project-root .env file. db.js and seed.js load that .env by an absolute path so they work no matter the working directory, and prisma/.env (git-ignored) points the Prisma CLI at the same file. The local database is Postgres.app's PostgreSQL 18, database student_store, superuser postgres. The schema is created by the three migrations (prisma migrate deploy) and filled by seed.js.
+
+Gaps resolved during frontend integration:
+
+- **image_url vs imageUrl.** The frontend read product.image_url (snake_case), but the API returns imageUrl (camelCase), because the schema uses @map to keep snake_case only in the database while the JSON stays camelCase. Fixed the frontend to read imageUrl in ProductCard and ProductDetail. The required features say to adjust the frontend to work with the API, so this was a frontend change, not a spec change.
+- **Cart shape vs items shape.** The cart is stored as { productId: quantity }. POST /orders wants an items array of { productId, quantity }. The checkout handler maps one to the other before sending.
+- **customer is an integer.** The spec and schema type customer as an Int, but the UI only collects a text "Student ID" field. The checkout parses it to an integer and shows a validation message if it is not a number, rather than sending a bad request. This keeps the client honest about the contract.
+- **Receipt shape.** CheckoutSuccess expects order.purchase.receipt.lines, which the API does not return. The handler builds that receipt on the frontend from the real response (order id, its order items, and the server total), so the success view works without changing the API contract.
+
+What the spec enabled:
+
+- Because Section 2 and Section 3 were written first, the integration was a checklist, not a debugging session. Every mismatch (field name, cart shape, customer type, receipt shape) was a quick, local fix, because the contract said exactly what each side should send and receive. The hardest endpoint, POST /orders, was already specified down to the rollback behavior, so wiring the cart to it was just shape translation.
