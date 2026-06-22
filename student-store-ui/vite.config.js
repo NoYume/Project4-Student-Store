@@ -7,6 +7,12 @@ export default defineConfig((envConfig) => ({
       include: ["./src/main.jsx"],
     }),
   ],
+  // Output the production bundle to "build" (Render's expected publish
+  // directory, and the folder name listed in .gitignore). Vite's default is
+  // "dist".
+  build: {
+    outDir: "build",
+  },
   server: {
     port: 5173,
     open: true,

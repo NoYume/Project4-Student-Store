@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./src/server.js",
-    "seed": "npx prisma db seed",
+    "build": "prisma generate && prisma migrate deploy",
+    "postinstall": "prisma generate",
+    "seed": "node seed.js",
     "dev": "node ./src/server.js"
   },
   "keywords": [],

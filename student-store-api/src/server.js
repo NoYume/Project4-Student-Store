@@ -242,8 +242,11 @@ app.post("/orders/:order_id/items", async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+// Render (and most hosts) assign the port via the PORT env var; fall back to
+// 3000 for local development.
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;
