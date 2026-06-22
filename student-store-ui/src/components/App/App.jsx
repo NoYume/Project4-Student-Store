@@ -1,23 +1,30 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import axios from "axios";
-import SubNavbar from "../SubNavbar/SubNavbar";
-import Sidebar from "../Sidebar/Sidebar";
-import Home from "../Home/Home";
+import AppLayout from "../AppLayout/AppLayout";
+import StorePage from "../StorePage/StorePage";
 import ProductDetail from "../ProductDetail/ProductDetail";
+import CartPage from "../CartPage/CartPage";
+import OrdersPage from "../OrdersPage/OrdersPage";
+import OrderDetail from "../OrderDetail/OrderDetail";
+import SettingsPage from "../SettingsPage/SettingsPage";
 import NotFound from "../NotFound/NotFound";
-import { removeFromCart, addToCart, getQuantityOfItemInCart, getTotalItemsInCart } from "../../utils/cart";
+import {
+  removeFromCart,
+  addToCart,
+  getQuantityOfItemInCart,
+  getTotalItemsInCart,
+} from "../../utils/cart";
 import { formatPrice } from "../../utils/format";
 import { API_BASE_URL } from "../../constants";
 import "./App.css";
 
 function App() {
-
   // State variables
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [cartPreviewOpen, setCartPreviewOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState("All Categories");
   const [searchInputValue, setSearchInputValue] = useState("");
-  const [userInfo, setUserInfo] = useState({ name: "", dorm_number: ""});
+  const [userInfo, setUserInfo] = useState({ name: "", email: "" });
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState({});
   const [isFetching, setIsFetching] = useState(false);
@@ -43,14 +50,20 @@ function App() {
     fetchProducts();
   }, []);
 
-  // Toggles sidebar
-  const toggleSidebar = () => setSidebarOpen((isOpen) => !isOpen);
+  // Cart-preview controls.
+  const closeCartPreview = () => setCartPreviewOpen(false);
 
-  // Functions to change state (used for lifting state)
+  // Two add-to-cart variants over the same cart util:
+  //  - handleOnAddToCart pops the preview sidebar (used on Store / ProductDetail).
+  //  - handleOnAddToCartSilent does not (used by the Cart page's own controls,
+  //    so editing quantities there doesn't re-pop the preview).
+  const handleOnAddToCart = (item) => {
+    setCart(addToCart(cart, item));
+    setCartPreviewOpen(true);
+  };
+  const handleOnAddToCartSilent = (item) => setCart(addToCart(cart, item));
   const handleOnRemoveFromCart = (item) => setCart(removeFromCart(cart, item));
-  const handleOnAddToCart = (item) => setCart(addToCart(cart, item));
   const handleGetItemQuantity = (item) => getQuantityOfItemInCart(cart, item);
-  const handleGetTotalCartItems = () => getTotalItemsInCart(cart);
 
   const handleOnSearchInputChange = (event) => {
     setSearchInputValue(event.target.value);
@@ -78,11 +91,21 @@ function App() {
       return;
     }
 
+    // Email is required and must look like an address: one @ with non-empty,
+    // space-free parts on each side. A domain dot is NOT required, so both
+    // "test@test.edu" and "user@email" are accepted.
+    const email = (userInfo.email || "").trim();
+    if (!/^[^\s@]+@[^\s@]+$/.test(email)) {
+      setError("Please enter a valid email (e.g. user@codepath.com)");
+      return;
+    }
+
     setIsCheckingOut(true);
     setError(null);
     try {
       const { data } = await axios.post(`${API_BASE_URL}/orders`, {
         customer,
+        email,
         items,
       });
 
@@ -95,7 +118,8 @@ function App() {
       const lines = [
         `Order #${data.id} confirmed — thank you!`,
         ...data.orderItems.map((item) => {
-          const name = productById[item.productId]?.name || `Product ${item.productId}`;
+          const name =
+            productById[item.productId]?.name || `Product ${item.productId}`;
           return `${item.quantity} x ${name} @ ${formatPrice(item.price)}`;
         }),
         `Total: ${formatPrice(data.totalPrice)}`,
@@ -103,45 +127,39 @@ function App() {
       setOrder({ ...data, purchase: { receipt: { lines } } });
       setCart({});
     } catch (err) {
-      setError(err?.response?.data?.error || "Failed to place order. Please try again.");
+      setError(
+        err?.response?.data?.error ||
+          "Failed to place order. Please try again.",
+      );
     } finally {
       setIsCheckingOut(false);
     }
   };
 
+  const cartCount = getTotalItemsInCart(cart);
 
   return (
     <div className="App">
       <BrowserRouter>
-        <Sidebar
-          cart={cart}
-          error={error}
-          userInfo={userInfo}
-          setUserInfo={setUserInfo}
-          isOpen={sidebarOpen}
-          products={products}
-          toggleSidebar={toggleSidebar}
-          isCheckingOut={isCheckingOut}
-          addToCart={handleOnAddToCart}
-          removeFromCart={handleOnRemoveFromCart}
-          getQuantityOfItemInCart={handleGetItemQuantity}
-          getTotalItemsInCart={handleGetTotalCartItems}
-          handleOnCheckout={handleOnCheckout}
-          order={order}
-          setOrder={setOrder}
-        />
-        <main>
-          <SubNavbar
-            activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
-            searchInputValue={searchInputValue}
-            handleOnSearchInputChange={handleOnSearchInputChange}
-          />
-          <Routes>
+        <Routes>
+          <Route
+            element={
+              <AppLayout
+                products={products}
+                cart={cart}
+                cartCount={cartCount}
+                cartPreviewOpen={cartPreviewOpen}
+                closeCartPreview={closeCartPreview}
+              />
+            }
+          >
+            {/* Default landing is the Store page. */}
+            <Route path="/" element={<Navigate to="/store" replace />} />
+
             <Route
-              path="/"
+              path="/store"
               element={
-                <Home
+                <StorePage
                   error={error}
                   products={products}
                   isFetching={isFetching}
@@ -149,41 +167,60 @@ function App() {
                   setActiveCategory={setActiveCategory}
                   addToCart={handleOnAddToCart}
                   searchInputValue={searchInputValue}
+                  handleOnSearchInputChange={handleOnSearchInputChange}
                   removeFromCart={handleOnRemoveFromCart}
                   getQuantityOfItemInCart={handleGetItemQuantity}
                 />
               }
             />
+
             <Route
-              path="/:productId"
+              path="/products/:productId"
               element={
                 <ProductDetail
-                  cart={cart}
-                  error={error}
-                  products={products}
                   addToCart={handleOnAddToCart}
                   removeFromCart={handleOnRemoveFromCart}
                   getQuantityOfItemInCart={handleGetItemQuantity}
                 />
               }
             />
+
             <Route
-              path="*"
+              path="/cart"
               element={
-                <NotFound
-                  error={error}
+                <CartPage
                   products={products}
-                  activeCategory={activeCategory}
-                  setActiveCategory={setActiveCategory}
+                  cart={cart}
+                  addToCart={handleOnAddToCartSilent}
+                  removeFromCart={handleOnRemoveFromCart}
+                  userInfo={userInfo}
+                  setUserInfo={setUserInfo}
+                  handleOnCheckout={handleOnCheckout}
+                  isCheckingOut={isCheckingOut}
+                  error={error}
+                  order={order}
+                  setOrder={setOrder}
                 />
               }
             />
-          </Routes>
-        </main>
+
+            <Route
+              path="/orders"
+              element={<OrdersPage products={products} />}
+            />
+            <Route
+              path="/orders/:orderId"
+              element={<OrderDetail products={products} />}
+            />
+
+            <Route path="/settings" element={<SettingsPage />} />
+
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
       </BrowserRouter>
     </div>
   );
 }
 
 export default App;
- 

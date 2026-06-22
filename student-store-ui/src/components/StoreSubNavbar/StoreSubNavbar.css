@@ -1,0 +1,160 @@
+.StoreSubNavbar {
+  width: 100%;
+  background: var(--pure-white);
+  border-bottom: solid 1px var(--border-color);
+}
+
+.StoreSubNavbar .content {
+  max-width: var(--content-width);
+  width: 100%;
+  margin: 0 auto;
+  padding: 16px var(--side-padding);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.StoreSubNavbar .left,
+.StoreSubNavbar .right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.StoreSubNavbar .page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--font-dark);
+  white-space: nowrap;
+}
+
+/* Category dropdown */
+.StoreSubNavbar .category-filter {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.StoreSubNavbar .category-filter select {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 38px;
+  padding: 0 36px 0 14px;
+  border: solid 1px var(--border-color);
+  border-radius: 6px;
+  background: var(--pure-white);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--font-dark);
+  cursor: pointer;
+}
+.StoreSubNavbar .category-filter select:focus {
+  outline: none;
+  border-color: var(--bright-green);
+}
+.StoreSubNavbar .category-filter i {
+  position: absolute;
+  right: 8px;
+  pointer-events: none;
+  color: var(--muted);
+  font-size: 20px;
+}
+
+/* Search */
+.StoreSubNavbar .search-bar {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 12px;
+  border: solid 1px var(--border-color);
+  border-radius: 6px;
+  background: var(--grey-bg);
+  min-width: 220px;
+}
+.StoreSubNavbar .search-bar:focus-within {
+  border-color: var(--bright-green);
+  background: var(--pure-white);
+}
+.StoreSubNavbar .search-bar i {
+  color: var(--muted);
+  font-size: 20px;
+  margin-right: 8px;
+}
+.StoreSubNavbar .search-bar input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: inherit;
+  font-size: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Demo controls */
+.StoreSubNavbar .view-toggle,
+.StoreSubNavbar .icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.StoreSubNavbar .view-toggle:hover,
+.StoreSubNavbar .icon-button:hover {
+  background: var(--grey-bg);
+  color: var(--font-dark);
+}
+.StoreSubNavbar .add-product {
+  height: 38px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 6px;
+  background: var(--bright-green);
+  color: var(--pure-white);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.StoreSubNavbar .add-product:hover {
+  filter: brightness(1.05);
+}
+
+/* ---- Responsive ---- */
+@media screen and (max-width: 900px) {
+  .StoreSubNavbar .content {
+    flex-wrap: wrap;
+  }
+  .StoreSubNavbar .left {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .StoreSubNavbar .search-bar {
+    flex: 1;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .StoreSubNavbar .content {
+    padding: 14px 20px;
+    gap: 12px;
+  }
+  .StoreSubNavbar .left {
+    gap: 12px;
+  }
+  .StoreSubNavbar .search-bar {
+    flex-basis: 100%;
+    min-width: 0;
+  }
+  /* Drop the demo-only controls on small screens to reduce clutter. */
+  .StoreSubNavbar .view-toggle,
+  .StoreSubNavbar .add-product {
+    display: none;
+  }
+}

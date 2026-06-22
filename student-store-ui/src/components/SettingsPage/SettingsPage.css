@@ -1,0 +1,200 @@
+.SettingsPage {
+  width: 100%;
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 50px;
+}
+
+.SettingsPage .content {
+  width: 100%;
+  max-width: 720px;
+  padding: 28px var(--side-padding);
+}
+
+.SettingsPage .title {
+  font-size: 26px;
+  font-weight: 700;
+}
+.SettingsPage .subtitle {
+  color: var(--font-light);
+  font-size: 15px;
+  margin: 6px 0 22px;
+}
+
+.SettingsPage .settings-card {
+  background: var(--pure-white);
+  border: solid 1px var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Profile header */
+.SettingsPage .profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px;
+  border-bottom: solid 1px var(--border-color);
+}
+.SettingsPage .profile .avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--grey-bg);
+  flex-shrink: 0;
+}
+.SettingsPage .profile .avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.SettingsPage .profile-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+.SettingsPage .profile-name {
+  font-weight: 600;
+  font-size: 17px;
+}
+.SettingsPage .profile-email {
+  color: var(--font-light);
+  font-size: 14px;
+}
+.SettingsPage .ghost-button {
+  padding: 8px 14px;
+  border: solid 1px var(--border-color);
+  border-radius: 6px;
+  background: var(--pure-white);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--font-light);
+  cursor: not-allowed;
+}
+
+/* Sections */
+.SettingsPage .section {
+  padding: 22px;
+  border-bottom: solid 1px var(--border-color);
+}
+.SettingsPage .section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.SettingsPage .field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.SettingsPage .field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.SettingsPage .field span {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--font-light);
+}
+.SettingsPage .field input {
+  height: 38px;
+  padding: 0 12px;
+  border: solid 1px var(--border-color);
+  border-radius: 6px;
+  background: var(--grey-bg);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--font-dark);
+  cursor: not-allowed;
+}
+
+/* Toggles */
+.SettingsPage .toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+}
+.SettingsPage .toggle-label {
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+}
+.SettingsPage .toggle-desc {
+  display: block;
+  color: var(--font-light);
+  font-size: 13px;
+  margin-top: 2px;
+}
+.SettingsPage .toggle {
+  width: 42px;
+  height: 24px;
+  border-radius: 12px;
+  background: var(--border-color);
+  flex-shrink: 0;
+  position: relative;
+  transition: background 0.15s ease;
+}
+.SettingsPage .toggle.on {
+  background: var(--bright-green);
+}
+.SettingsPage .toggle .knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--pure-white);
+  transition: transform 0.15s ease;
+}
+.SettingsPage .toggle.on .knob {
+  transform: translateX(18px);
+}
+
+/* Footer */
+.SettingsPage .card-footer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 22px;
+}
+.SettingsPage .save-button {
+  padding: 11px 22px;
+  border: none;
+  border-radius: 6px;
+  background: var(--bright-green);
+  color: var(--pure-white);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.SettingsPage .demo-note {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+@media screen and (max-width: 600px) {
+  .SettingsPage .content {
+    padding: 20px;
+  }
+  .SettingsPage .field-grid {
+    grid-template-columns: 1fr;
+  }
+  .SettingsPage .profile {
+    flex-wrap: wrap;
+  }
+  .SettingsPage .card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

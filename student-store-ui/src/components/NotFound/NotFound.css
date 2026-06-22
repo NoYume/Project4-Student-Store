@@ -41,3 +41,14 @@
   font-size: 90px;
   margin-bottom: 20px;
 }
+.NotFound .cta .back-link {
+  margin-top: 20px;
+  padding: 11px 22px;
+  background: var(--bright-green);
+  color: var(--pure-white);
+  border-radius: 6px;
+  font-weight: 600;
+}
+.NotFound .cta .back-link:hover {
+  filter: brightness(1.05);
+}

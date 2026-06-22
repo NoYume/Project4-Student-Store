@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const Product = require("../models/product");
 const Order = require("../models/order");
+const OrderItem = require("../models/orderItem");
 
 const app = express();
 
@@ -107,10 +108,11 @@ app.delete("/products/:id", async (req, res) => {
   }
 });
 
-// GET /orders — list all orders
+// GET /orders — list all orders (optional ?email= filter, case-insensitive)
 app.get("/orders", async (req, res) => {
+  const { email } = req.query;
   try {
-    const orders = await Order.list();
+    const orders = await Order.list({ email });
     res.status(200).json(orders);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch orders" });
@@ -137,7 +139,7 @@ app.get("/orders/:order_id", async (req, res) => {
 
 // POST /orders — create an order and its items atomically (see planning.md Section 3)
 app.post("/orders", async (req, res) => {
-  const { customer, status, items } = req.body;
+  const { customer, status, email, items } = req.body;
 
   // Validate the input before any database work.
   if (!Array.isArray(items) || items.length === 0) {
@@ -155,7 +157,7 @@ app.post("/orders", async (req, res) => {
   }
 
   try {
-    const order = await Order.create({ customer, status, items });
+    const order = await Order.create({ customer, status, email, items });
     res.status(201).json(order);
   } catch (err) {
     if (err.code === "PRODUCT_NOT_FOUND") {
@@ -200,6 +202,43 @@ app.delete("/orders/:order_id", async (req, res) => {
       return res.status(404).json({ error: "Order not found" });
     }
     res.status(500).json({ error: "Failed to delete order" });
+  }
+});
+
+// GET /order-items — list every order item (stretch endpoint)
+app.get("/order-items", async (req, res) => {
+  try {
+    res.status(200).json(await OrderItem.list());
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch order items" });
+  }
+});
+
+// POST /orders/:order_id/items — add one item to an existing order (stretch endpoint)
+// The server prices the item from the product and recomputes the order total;
+// Order.addItem runs it all in a transaction (see planning.md Section 2).
+app.post("/orders/:order_id/items", async (req, res) => {
+  const orderId = Number(req.params.order_id);
+  if (Number.isNaN(orderId)) {
+    return res.status(400).json({ error: "Invalid order id" });
+  }
+  const { productId, quantity } = req.body;
+  if (productId === undefined || !(quantity > 0)) {
+    return res
+      .status(400)
+      .json({ error: "An item needs a productId and a quantity above zero" });
+  }
+  try {
+    const order = await Order.addItem(orderId, { productId, quantity });
+    res.status(201).json(order);
+  } catch (err) {
+    if (err.code === "ORDER_NOT_FOUND") {
+      return res.status(404).json({ error: "Order not found" });
+    }
+    if (err.code === "PRODUCT_NOT_FOUND") {
+      return res.status(400).json({ error: err.message });
+    }
+    res.status(500).json({ error: "Failed to add order item" });
   }
 });
 

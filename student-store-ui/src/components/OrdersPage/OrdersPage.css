@@ -1,0 +1,185 @@
+.OrdersPage {
+  width: 100%;
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 50px;
+}
+
+.OrdersPage .content {
+  width: 100%;
+  max-width: 900px;
+  padding: 28px var(--side-padding);
+}
+
+.OrdersPage .title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* Filter bar */
+.OrdersPage .filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.OrdersPage .filter-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px 12px;
+  border: solid 1px var(--border-color);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+}
+.OrdersPage .filter-input:focus {
+  outline: none;
+  border-color: var(--bright-green);
+}
+.OrdersPage .filter-button,
+.OrdersPage .show-all-button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+}
+.OrdersPage .filter-button {
+  background: var(--bright-green);
+  color: white;
+}
+.OrdersPage .show-all-button {
+  background: var(--grey-bg);
+  color: var(--font-dark);
+  border: solid 1px var(--border-color);
+}
+
+.OrdersPage .filter-note {
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: var(--font-light);
+}
+
+.OrdersPage .notification {
+  padding: 20px;
+  font-size: 16px;
+}
+.OrdersPage .notification.error {
+  color: var(--accent-orange);
+}
+
+/* Orders table */
+.OrdersPage .OrdersTable {
+  background: var(--pure-white);
+  border: solid 1px var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.OrdersPage .header-row,
+.OrdersPage .order-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1.6fr 1.2fr 1fr 1fr;
+  align-items: center;
+  padding: 14px 18px;
+  gap: 12px;
+}
+
+.OrdersPage .header-row {
+  font-weight: 600;
+  border-bottom: solid 1px var(--border-color);
+  background: var(--dark-blue);
+}
+.OrdersPage .header-row span {
+  color: var(--pure-white);
+}
+
+.OrdersPage .order-row {
+  border-bottom: solid 1px var(--border-color);
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.15s;
+}
+.OrdersPage .order-row:last-child {
+  border-bottom: none;
+}
+.OrdersPage .order-row:hover {
+  background-color: var(--grey-bg);
+}
+
+.OrdersPage .order-id {
+  font-weight: 600;
+}
+
+.OrdersPage .center {
+  text-align: center;
+}
+.OrdersPage .right {
+  text-align: right;
+  font-weight: 600;
+}
+
+.OrdersPage .status {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  text-transform: capitalize;
+  background: var(--bright-green);
+  color: white;
+}
+
+/* Item-thumbnail previews */
+.OrdersPage .OrderItemPreview {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.OrdersPage .OrderItemPreview .thumb {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 5px;
+  overflow: hidden;
+  background: var(--grey-bg);
+  border: solid 1px var(--border-color);
+}
+.OrdersPage .OrderItemPreview .thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 2px;
+}
+.OrdersPage .OrderItemPreview .more-count {
+  font-size: 13px;
+  color: var(--font-light);
+  font-weight: 600;
+}
+.OrdersPage .preview-loading,
+.OrdersPage .preview-empty {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ---- Responsive ---- */
+@media screen and (max-width: 700px) {
+  .OrdersPage .content {
+    padding: 20px;
+  }
+  /* Drop the item-preview column on small screens; keep the essentials. */
+  .OrdersPage .header-row,
+  .OrdersPage .order-row {
+    grid-template-columns: 1.2fr 1.2fr 0.9fr 0.9fr;
+    padding: 12px;
+    gap: 8px;
+    font-size: 14px;
+  }
+  .OrdersPage .order-items {
+    display: none;
+  }
+}

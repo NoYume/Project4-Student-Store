@@ -1,19 +1,36 @@
 .ProductCard {
+  position: relative;
   height: 330px;
   width: 250px;
   background: var(--pure-white);
   display: flex;
   flex-direction: column;
   border: solid 1px var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: box-shadow 0.15s ease;
 }
+.ProductCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
 .ProductCard .media {
-  height: 250px;
+  height: 230px;
+  width: 100%;
+  background: var(--grey-bg);
+}
+.ProductCard .media a {
+  display: block;
+  height: 100%;
   width: 100%;
 }
 .ProductCard .media img {
-  height: 250px;
-  width: 248px;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  padding: 10px;
 }
+
 .ProductCard .product-info {
   flex: 1;
   display: flex;
@@ -23,55 +40,131 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   padding: 8px 12px;
+  min-width: 0;
 }
 .ProductCard .info .product-name {
   font-size: 15px;
   font-weight: 500;
+  color: var(--font-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ProductCard .info .product-name:hover {
+  color: var(--bright-green);
 }
 .ProductCard .info .product-price {
   font-size: 14px;
+  color: var(--font-light);
+  margin-top: 2px;
 }
+
+/* Actions column: + and - at the top, 3-dots pinned to the bottom. */
 .ProductCard .actions {
-  width: 80px;
+  width: 56px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-}
-.ProductCard .actions .quantity {
-  width: 80px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  padding: 5px;
-}
-.ProductCard .actions .quantity .amt {
-  background: var(--accent-orange);
-  color: white;
-  width: 30px;
-  height: 20px;
-  border-radius: 4px;
-  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
+  padding: 8px 6px;
+  border-left: solid 1px var(--border-color);
 }
 .ProductCard .actions .buttons {
-  width: 80px;
-  height: 100%;
-
   display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 .ProductCard .actions .buttons i {
-  width: 20px;
-  height: 20px;
+  width: 26px;
+  height: 26px;
+  font-size: 18px;
   border: solid 1px var(--bright-green);
+  border-radius: 4px;
   color: var(--bright-green);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5px;
-  margin: 10px 5px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.ProductCard .actions .buttons i:hover {
+  background: var(--bright-green);
+  color: var(--pure-white);
+}
+
+/* 3-dots overflow */
+.ProductCard .actions .more {
+  position: relative;
+}
+.ProductCard .actions .more > i {
+  width: 26px;
+  height: 26px;
+  font-size: 20px;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+.ProductCard .actions .more > i:hover {
+  background: var(--grey-bg);
+  color: var(--font-dark);
+}
+.ProductCard .actions .more-menu {
+  position: absolute;
+  bottom: 30px;
+  right: 0;
+  z-index: 20;
+  background: var(--pure-white);
+  border: solid 1px var(--border-color);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  min-width: 130px;
+  overflow: hidden;
+}
+.ProductCard .actions .more-menu a {
+  display: block;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--font-dark);
+  white-space: nowrap;
+}
+.ProductCard .actions .more-menu a:hover {
+  background: var(--grey-bg);
+  color: var(--bright-green);
+}
+
+/* Quantity badge — floats over the image top-right. */
+.ProductCard .quantity-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  background: var(--accent-orange);
+  color: var(--pure-white);
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* ---- Responsive ---- */
+@media screen and (max-width: 600px) {
+  .ProductCard {
+    width: 100%;
+    height: auto;
+    min-height: 300px;
+  }
+  .ProductCard .media {
+    height: 200px;
+  }
 }

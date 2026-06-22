@@ -25,6 +25,7 @@ One customer order. Fields:
 
 - **id** (Int, column id): the primary key, auto-increments.
 - **customer** (Int, column customer_id): required.
+- **email** (String, column email): optional. The email of the person who placed the order, used by the Filter Orders feature. Optional because older orders were created before the field existed and may not have one.
 - **totalPrice** (Float, column total_price): required, defaults to 0.
 - **status** (String, column status): required, defaults to pending.
 - **createdAt** (DateTime, column created_at): required, defaults to the current time.
@@ -117,6 +118,8 @@ Notes:
 
 **GET /orders** gets all orders.
 
+- Query params: email filters to orders whose email matches exactly, ignoring case (Filter Orders feature). No email value means all orders.
+- An email with no matches returns 200 with an empty list, not an error. This is how the frontend shows "no orders found".
 - Success: 200 with a list of orders.
 - Error: 500 with Failed to fetch orders.
 
@@ -127,7 +130,7 @@ Notes:
 
 **POST /orders** creates an order with its items. See Section 3 for the full flow.
 
-- Body has customer (required), status (optional, defaults to pending), and items (required, not empty), where each item has a productId and a quantity.
+- Body has customer (required), status (optional, defaults to pending), email (optional), and items (required, not empty), where each item has a productId and a quantity.
 - The order total is not taken from the client.
 - Success: 201 with the new order and its items, the same shape as GET /orders/:order_id.
 - Errors: 400 with Order must include at least one item, or 400 with a message that the product id does not exist.
@@ -142,6 +145,22 @@ Notes:
 
 - Success: 200 with the message Order deleted.
 - Error: 404 with Order not found.
+
+### Stretch Endpoints (Order Items)
+
+Two of the listed stretch endpoints, fetching all orders and fetching one order by id, were already built as required features (GET /orders and GET /orders/:order_id above). The two endpoints below are the new ones. The path uses a hyphen, order-items, to match the required-features list.
+
+**GET /order-items** gets every order item in the database.
+
+- Success: 200 with a list of order items, where each item has its id, orderId, productId, quantity, and price, or an empty list if none.
+- Error: 500 with the message Failed to fetch order items.
+- This list is not paged or filtered. The dataset is small, so it returns every row.
+
+**POST /orders/:order_id/items** adds one new item to an existing order.
+
+- Body has productId and quantity. The server reads the product's price from the database and stores it on the new item, so the client cannot set its own price. It then adds the item's cost to the order's totalPrice. The whole thing runs in a transaction, so a bad item never leaves a half-applied change or a wrong total.
+- Success: 201 with the updated order and all its items, the same shape as GET /orders/:order_id.
+- Errors: 400 with Invalid order id; 400 if productId is missing or quantity is not above zero; 404 with Order not found; or 400 with a message that the product id does not exist.
 
 ## Section 3: How POST /orders Works
 
@@ -191,6 +210,21 @@ The point: the client either gets a full order back or gets an error, and a half
 - **How the rollback works:** the whole create runs inside prisma.$transaction. Every query uses the transaction client, so they all commit together or not at all. If a product id is missing, the code throws, and Prisma undoes everything in that transaction. Tested with a payload that mixed a good product and a missing one: the response was 400 and no order was saved, so the good item did not leak in.
 - **One thing to do differently:** the route does the field checks and the model does the pricing and the transaction. That split works, but if this grew I would move all the validation into one place so the route stays thin.
 
+### Stretch: Added Endpoints
+
+- **Two of the four were already done.** The stretch list asks for an endpoint to fetch all orders and one to fetch an order by id. Those were built as required features in Milestones 3 and 4 (GET /orders and GET /orders/:order_id). Only GET /order-items and POST /orders/:order_id/items were new.
+- **GET /order-items reused the existing model.** OrderItem.list() was already there from Milestone 4, so the route is a thin wrapper, the same shape as GET /products and GET /orders.
+- **POST /orders/:order_id/items copied the POST /orders pattern.** Order.addItem reads the price from the product, not the client, recomputes the order total on the server, and runs the lookup, the item create, and the total update in one prisma.$transaction. So a bad product id (or any error) rolls the whole thing back: tested with product 9999, the response was 400 and the order's total and item count were unchanged. It returns the full updated order with its items, the same shape as GET /orders/:order_id, which is the most useful thing for a frontend to render after adding an item.
+- **What I would watch if this grew:** GET /order-items returns every row with no paging or filter. Fine for this dataset, but a real store would page it or scope it to an order. Noted here rather than silently capping the list.
+
+### Stretch: Filter Orders
+
+- **Email did not exist anywhere yet.** The order's customer is an integer Student ID, and nothing stored an email. So filtering by email was not a frontend-only change: I added an optional email field to the Order model (a migration, add_email_to_orders), accepted it in POST /orders, and seeded the two starter orders with emails. Optional, because orders created before the field existed have no email, and the migration must be safe on existing rows.
+- **Reused the GET /products filter pattern.** Order.list now takes an optional email and builds a Prisma where the same way Product.list builds category and sort. The route reads req.query.email and passes it through. No new endpoint, just a query param.
+- **Exact, case-insensitive match.** Prisma's equals with mode insensitive, so STUDENT101@SCHOOL.EDU finds student101@school.edu. An email with no matches returns 200 with an empty list, which is how the frontend shows "No orders found for that email" rather than treating it as an error.
+- **Fixed a broken starter input.** The PaymentInfo form already had an email-typed input, but it was labeled "Dorm Room Number", read userInfo.id (never initialized), and was never sent. I relabeled it Email, pointed it at userInfo.email, and the checkout now sends email to POST /orders. The field stays optional end to end.
+- **One thing to watch:** email is free text with no uniqueness or verification. Fine for this assignment, but a real system would validate and probably tie orders to a customer record instead of storing a loose email per order.
+
 ## Spec Reconciliation
 
 ### Milestone 4 (Schema Audit)
@@ -227,7 +261,3 @@ Gaps resolved during frontend integration:
 - **Cart shape vs items shape.** The cart is stored as { productId: quantity }. POST /orders wants an items array of { productId, quantity }. The checkout handler maps one to the other before sending.
 - **customer is an integer.** The spec and schema type customer as an Int, but the UI only collects a text "Student ID" field. The checkout parses it to an integer and shows a validation message if it is not a number, rather than sending a bad request. This keeps the client honest about the contract.
 - **Receipt shape.** CheckoutSuccess expects order.purchase.receipt.lines, which the API does not return. The handler builds that receipt on the frontend from the real response (order id, its order items, and the server total), so the success view works without changing the API contract.
-
-What the spec enabled:
-
-- Because Section 2 and Section 3 were written first, the integration was a checklist, not a debugging session. Every mismatch (field name, cart shape, customer type, receipt shape) was a quick, local fix, because the contract said exactly what each side should send and receive. The hardest endpoint, POST /orders, was already specified down to the rollback behavior, so wiring the cart to it was just shape translation.

@@ -1,0 +1,198 @@
+.TopNavbar {
+  width: 100%;
+  background: var(--dark-blue);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.TopNavbar .content {
+  max-width: var(--content-width);
+  width: 100%;
+  margin: 0 auto;
+  height: 64px;
+  padding: 0 var(--side-padding);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Brand / logo */
+.TopNavbar .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.TopNavbar .brand-logo {
+  height: 36px;
+  width: auto;
+}
+.TopNavbar .brand-name {
+  color: var(--pure-white);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.2px;
+}
+
+/* Tabs */
+.TopNavbar .tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+.TopNavbar .tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  height: 64px;
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.75);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  border-bottom: solid 3px transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.TopNavbar .tab:hover {
+  color: var(--pure-white);
+}
+/* Active route tab gets the brand-green underline (matches existing convention). */
+.TopNavbar .tab.active {
+  color: var(--pure-white);
+  border-bottom-color: var(--bright-green);
+}
+/* The inert Home tab looks identical but never activates. */
+.TopNavbar .tab.inert {
+  cursor: default;
+}
+
+.TopNavbar .cart-tab {
+  position: relative;
+}
+.TopNavbar .cart-badge {
+  background: var(--accent-orange);
+  color: var(--pure-white);
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Right-side demo icons */
+.TopNavbar .actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.TopNavbar .icon-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+}
+.TopNavbar .icon-button:hover {
+  color: var(--pure-white);
+}
+.TopNavbar .icon-button .dot {
+  position: absolute;
+  top: 0;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-orange);
+  border: solid 1px var(--dark-blue);
+}
+.TopNavbar .avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--pure-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: solid 2px rgba(255, 255, 255, 0.4);
+}
+.TopNavbar .avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Hamburger — hidden on desktop */
+.TopNavbar .hamburger {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--pure-white);
+  cursor: pointer;
+  margin-left: auto;
+}
+
+/* ---- Responsive ---- */
+@media screen and (max-width: 768px) {
+  .TopNavbar .content {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 56px;
+    padding: 0 20px;
+    gap: 12px;
+  }
+  .TopNavbar .hamburger {
+    display: flex;
+    align-items: center;
+    order: 3;
+  }
+  .TopNavbar .actions {
+    order: 2;
+    margin-left: auto;
+  }
+  /* Collapsed tab menu: hidden until toggled, then a full-width stacked column. */
+  .TopNavbar .tabs {
+    order: 4;
+    flex-basis: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.25s ease;
+  }
+  .TopNavbar .tabs.open {
+    max-height: 320px;
+    padding-bottom: 8px;
+  }
+  .TopNavbar .tab {
+    height: 46px;
+    border-bottom: solid 1px rgba(255, 255, 255, 0.1);
+  }
+  .TopNavbar .tab.active {
+    border-bottom-color: var(--bright-green);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .TopNavbar .brand-name {
+    display: none;
+  }
+  .TopNavbar .actions {
+    gap: 10px;
+  }
+}

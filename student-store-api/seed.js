@@ -1,7 +1,10 @@
+const path = require('path')
+// The .env file lives at the project root, one level up from this folder.
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const fs = require('fs')
-const path = require('path')
 
 async function seed() {
   try {
@@ -14,11 +17,11 @@ async function seed() {
 
     // Load JSON data
     const productsData = JSON.parse(
-      fs.readFileSync(path.join(__dirname, '../data/products.json'), 'utf8')
+      fs.readFileSync(path.join(__dirname, 'data/products.json'), 'utf8')
     )
 
     const ordersData = JSON.parse(
-      fs.readFileSync(path.join(__dirname, '../data/orders.json'), 'utf8')
+      fs.readFileSync(path.join(__dirname, 'data/orders.json'), 'utf8')
     )
 
     // Seed products
@@ -39,6 +42,7 @@ async function seed() {
       const createdOrder = await prisma.order.create({
         data: {
           customer: order.customer_id,
+          email: order.email,
           totalPrice: order.total_price,
           status: order.status,
           createdAt: new Date(order.created_at),

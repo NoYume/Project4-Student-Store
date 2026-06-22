@@ -1,0 +1,140 @@
+.OrderDetail {
+  width: 100%;
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 50px;
+}
+
+.OrderDetail .content {
+  width: 100%;
+  max-width: 700px;
+  padding: 20px;
+}
+
+.OrderDetail .notification {
+  padding: 20px 0;
+  font-size: 16px;
+}
+
+.OrderDetail .notification.error {
+  color: var(--accent-orange);
+}
+
+.OrderDetail .back-link,
+.OrderDetail .shop-link {
+  display: inline-block;
+  margin-bottom: 15px;
+  color: var(--bright-green);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.OrderDetail .shop-link {
+  margin-top: 18px;
+  margin-bottom: 0;
+}
+
+.OrderDetail .back-link:hover,
+.OrderDetail .shop-link:hover {
+  text-decoration: underline;
+}
+
+.OrderDetail .order-card {
+  background: var(--pure-white);
+  border: solid 1px var(--border-color);
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.OrderDetail .order-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.OrderDetail .order-title {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.OrderDetail .status {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  text-transform: capitalize;
+  background: var(--bright-green);
+  color: white;
+}
+
+.OrderDetail .order-meta {
+  font-size: 14px;
+  color: #666;
+  margin: 6px 0 18px;
+}
+
+.OrderDetail .ItemsTable {
+  border-top: solid 1px var(--border-color);
+}
+
+.OrderDetail .header-row,
+.OrderDetail .item-row {
+  display: grid;
+  grid-template-columns: 56px 2fr 1fr 1fr 1fr;
+  align-items: center;
+  padding: 12px 4px;
+  gap: 10px;
+}
+
+.OrderDetail .header-row {
+  font-weight: 600;
+  border-bottom: solid 1px var(--border-color);
+}
+
+.OrderDetail .item-row {
+  border-bottom: solid 1px var(--border-color);
+}
+
+.OrderDetail .col-image img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  background: var(--grey-bg);
+  border-radius: 5px;
+  padding: 3px;
+}
+
+.OrderDetail .center {
+  text-align: center;
+}
+
+.OrderDetail .right {
+  text-align: right;
+}
+
+.OrderDetail .order-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 4px 4px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+@media screen and (max-width: 560px) {
+  .OrderDetail .content {
+    padding: 20px;
+  }
+  /* Drop the image column on small screens to keep the columns readable. */
+  .OrderDetail .header-row,
+  .OrderDetail .item-row {
+    grid-template-columns: 1.8fr 0.9fr 1fr 1fr;
+    gap: 8px;
+    font-size: 14px;
+  }
+  .OrderDetail .col-image {
+    display: none;
+  }
+}

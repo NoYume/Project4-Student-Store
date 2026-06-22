@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import NotFound from "../NotFound/NotFound";
 import { formatPrice } from "../../utils/format";
+import { getProductImage, FALLBACK_IMAGE } from "../../utils/productImage";
 import { API_BASE_URL } from "../../constants";
 import "./ProductDetail.css";
 
@@ -56,18 +57,36 @@ function ProductDetail({ addToCart, removeFromCart, getQuantityOfItemInCart }) {
 
   return (
     <div className="ProductDetail">
-      <div className="product-card">
-        <div className="media">
-          <img src={product.imageUrl || "/placeholder.png"} alt={product.name} />
-        </div>
-        <div className="product-info">
-          <p className="product-name">{product.name}</p>
-          <p className="product-price">{formatPrice(product.price)}</p>
-          <p className="description">{product.description}</p>
-          <div className="actions">
-            <button onClick={handleAddToCart}>Add to Cart</button>
-            {quantity > 0 && <button onClick={handleRemoveFromCart}>Remove from Cart</button>}
-            {quantity > 0 && <span className="quantity">Quantity: {quantity}</span>}
+      <div className="content">
+        <Link to="/store" className="back-link">
+          &larr; Back to Store
+        </Link>
+        <div className="product-card">
+          <div className="media">
+            <img
+              src={getProductImage(product)}
+              alt={product.name}
+              onError={(e) => {
+                e.currentTarget.src = FALLBACK_IMAGE;
+              }}
+            />
+          </div>
+          <div className="product-info">
+            <span className="category-tag">{product.category}</span>
+            <p className="product-name">{product.name}</p>
+            <p className="product-price">{formatPrice(product.price)}</p>
+            <p className="description">{product.description}</p>
+            <div className="actions">
+              <button onClick={handleAddToCart}>Add to Cart</button>
+              {quantity > 0 && (
+                <button className="secondary" onClick={handleRemoveFromCart}>
+                  Remove from Cart
+                </button>
+              )}
+              {quantity > 0 && (
+                <span className="quantity">In cart: {quantity}</span>
+              )}
+            </div>
           </div>
         </div>
       </div>

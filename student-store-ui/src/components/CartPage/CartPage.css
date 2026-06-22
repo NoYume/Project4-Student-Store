@@ -1,0 +1,217 @@
+.CartPage {
+  width: 100%;
+  max-width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 50px;
+}
+
+.CartPage .content {
+  width: 100%;
+  max-width: var(--content-width);
+  padding: 28px var(--side-padding);
+}
+
+.CartPage .page-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 22px;
+}
+
+/* Empty state */
+.CartPage .empty-cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 60px 20px;
+  background: var(--pure-white);
+  border: solid 1px var(--border-color);
+  border-radius: 8px;
+  color: var(--font-light);
+}
+.CartPage .empty-cart i {
+  font-size: 48px;
+  color: var(--muted);
+}
+.CartPage .empty-cart .shop-link {
+  color: var(--bright-green);
+  font-weight: 600;
+}
+
+/* Two-column layout: table + checkout */
+.CartPage .cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ---- Cart table ---- */
+.CartPage .CartTable {
+  background: var(--pure-white);
+  border: solid 1px var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.CartPage .header-row,
+.CartPage .product-row {
+  display: grid;
+  grid-template-columns: 72px 2fr 1.3fr 1fr 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+}
+
+.CartPage .header-row {
+  background: var(--dark-blue);
+  color: var(--pure-white);
+  font-weight: 600;
+  font-size: 15px;
+}
+.CartPage .header-row span {
+  color: var(--pure-white);
+}
+
+.CartPage .product-row {
+  border-bottom: solid 1px var(--border-color);
+}
+.CartPage .product-row:last-of-type {
+  border-bottom: none;
+}
+
+.CartPage .col-image img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  background: var(--grey-bg);
+  border-radius: 6px;
+  padding: 4px;
+}
+.CartPage .col-name a {
+  color: var(--font-dark);
+  font-weight: 500;
+}
+.CartPage .col-name a:hover {
+  color: var(--bright-green);
+}
+.CartPage .col-price,
+.CartPage .col-cost {
+  text-align: right;
+}
+.CartPage .col-cost {
+  font-weight: 600;
+}
+
+/* Quantity stepper */
+.CartPage .qty-control {
+  display: inline-flex;
+  align-items: center;
+  border: solid 1px var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.CartPage .qty-control button {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: var(--grey-bg);
+  color: var(--font-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.CartPage .qty-control button:hover {
+  background: var(--bright-green);
+  color: var(--pure-white);
+}
+.CartPage .qty-control button i {
+  font-size: 18px;
+}
+.CartPage .qty-value {
+  min-width: 34px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Receipt */
+.CartPage .receipt {
+  padding: 16px 18px;
+  background: var(--grey-bg);
+  border-top: solid 1px var(--border-color);
+}
+.CartPage .receipt-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 15px;
+}
+.CartPage .receipt-row .value {
+  font-weight: 500;
+}
+.CartPage .receipt-row.total {
+  border-top: solid 1px var(--border-color);
+  margin-top: 6px;
+  padding-top: 12px;
+  font-size: 18px;
+  font-weight: 700;
+}
+.CartPage .receipt-row.total .label,
+.CartPage .receipt-row.total .value {
+  font-weight: 700;
+}
+
+/* ---- Checkout side panel (hosts reused dark-on-light components) ---- */
+.CartPage .cart-checkout {
+  background: var(--dark-blue);
+  border-radius: 8px;
+  padding: 8px 6px 16px;
+}
+
+/* Post-checkout receipt. CheckoutSuccess renders white text, so it needs the
+   dark panel background. */
+.CartPage .checkout-result {
+  max-width: 480px;
+  background: var(--dark-blue);
+  border-radius: 8px;
+  padding: 10px 8px 18px;
+}
+
+/* ---- Responsive ---- */
+@media screen and (max-width: 900px) {
+  .CartPage .cart-layout {
+    grid-template-columns: 1fr;
+  }
+  .CartPage .cart-checkout {
+    max-width: 480px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .CartPage .content {
+    padding: 20px;
+  }
+  /* Compact the table: drop the image column, shrink columns. */
+  .CartPage .header-row,
+  .CartPage .product-row {
+    grid-template-columns: 1.6fr 1.2fr 0.9fr 0.9fr;
+    gap: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  .CartPage .col-image {
+    display: none;
+  }
+  .CartPage .qty-control button {
+    width: 26px;
+    height: 26px;
+  }
+  .CartPage .qty-value {
+    min-width: 26px;
+  }
+}
