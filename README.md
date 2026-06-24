@@ -2,7 +2,7 @@
 
 Submitted by: **Daniel Lam**
 
-Deployed Application (optional): [Student Store Deployed Site](ADD_LINK_HERE)
+Deployed Application (optional): [Student Store Deployed Site](https://project4-student-store.onrender.com/)
 
 ### Application Features
 
@@ -90,27 +90,29 @@ Deployed Application (optional): [Student Store Deployed Site](ADD_LINK_HERE)
   - [x] Upon entering an email address and submitting the input, the list of orders is filtered to only show orders placed by the user with the provided email.
   - [x] The user can easily navigate back to the full list of orders after filtering.
     - [x] Proper error handling is implemented, such as displaying "no orders found" when an invalid email is provided.
-- [ ] **Deployment**
-  - [ ] Website is deployed using [Render](https://courses.codepath.org/snippets/site/render_deployment_guide).
-  - [ ] **VIDEO WALKTHROUGH SPECIAL INSTRUCTIONS**: To ease the grading process, please use the deployed version of your website in your walkthrough with the URL visible.
+- [x] **Deployment**
+  - [x] Website is deployed using [Render](https://courses.codepath.org/snippets/site/render_deployment_guide).
+  - [x] **VIDEO WALKTHROUGH SPECIAL INSTRUCTIONS**: To ease the grading process, please use the deployed version of your website in your walkthrough with the URL visible.
 
 ### Walkthrough Video
 
-`ADD_EMBEDDED_CODE_HERE`
+[![Walkthrough Demo Video](https://cdn.loom.com/sessions/thumbnails/e4d51ca66d7c4cf583e12cbf3511b046-e9d5bda4fdf67e92-full-play.gif)](https://www.loom.com/share/e4d51ca66d7c4cf583e12cbf3511b046)
+
+Loom video recording: [Walkthrough Demo Video](https://www.loom.com/share/e4d51ca66d7c4cf583e12cbf3511b046)
 
 ### Reflection
 
 - Did the topics discussed in your labs prepare you to complete the assignment? Be specific, which features in your weekly assignment did you feel unprepared to complete?
 
-Add your response here
+Yes, the topics that were taught in class allowed me to navigate my postgresql database and understand how to connect the database to the backend using endpoints. Some of the features I wasn't prepared for was deploying a mono repo full stack website with render. I had to learn to deploy the database, backend, and frontend into separate services and connecting them with each of their own links
 
 - If you had more time, what would you have done differently? Would you have added additional features? Changed the way your project responded to a particular event, etc.
 
-Add your response here
+If I had more time, I would have added the ability to add new items as a store admin, allowing more then just the pre-selected items in the store. I would also like to add a login feature to prevent the user from seeing all the orders that isn't theirs.
 
 - Reflect on your project demo, what went well? Were there things that maybe didn't go as planned? Did you notice something that your peer did that you would like to try next time?
 
-Add your response here
+I think the demo went well but one thing that didn't go as planned was my way of talking when I present. I tend to use a bit of filler words in between features or saying filler words whenever I'm waiting for a request to load. One thing I liked from my peers was one of them added the ability to actually login and validate the orders they can see, not showing all of them.s
 
 ### Open-source libraries used
 
