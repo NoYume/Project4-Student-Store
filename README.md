@@ -104,7 +104,7 @@ Loom video recording: [Walkthrough Demo Video](https://www.loom.com/share/e4d51c
 
 - Did the topics discussed in your labs prepare you to complete the assignment? Be specific, which features in your weekly assignment did you feel unprepared to complete?
 
-Yes, the topics that were taught in class allowed me to navigate my postgresql database and understand how to connect the database to the backend using endpoints. Some of the features I wasn't prepared for was deploying a mono repo full stack website with render. I had to learn to deploy the database, backend, and frontend into separate services and connecting them with each of their own links
+Yes, the topics that were taught in class allowed me to navigate my postgresql database and understand how to connect the database to the backend using endpoints. Some of the features I wasn't prepared for was deploying a mono repo full stack website with render. I had to learn to deploy the database, backend, and frontend into separate services and connecting them with each of their own links.
 
 - If you had more time, what would you have done differently? Would you have added additional features? Changed the way your project responded to a particular event, etc.
 
@@ -112,7 +112,7 @@ If I had more time, I would have added the ability to add new items as a store a
 
 - Reflect on your project demo, what went well? Were there things that maybe didn't go as planned? Did you notice something that your peer did that you would like to try next time?
 
-I think the demo went well but one thing that didn't go as planned was my way of talking when I present. I tend to use a bit of filler words in between features or saying filler words whenever I'm waiting for a request to load. One thing I liked from my peers was one of them added the ability to actually login and validate the orders they can see, not showing all of them.s
+I think the demo went well but one thing that didn't go as planned was my way of talking when I present. I tend to use a bit of filler words in between features or saying filler words whenever I'm waiting for a request to load. One thing I liked from my peers was one of them added the ability to actually login and validate the orders they can see, not showing all of them.
 
 ### Open-source libraries used
 
